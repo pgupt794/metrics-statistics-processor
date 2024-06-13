@@ -1,0 +1,6 @@
+# Code owners file.
+# This file document who is tagged for reviewing for any given pull request and repositories for changes to config
+# and source code. Each line is a file pattern followed by owners.
+
+# Module                        # Owners
+*                               @tech-engg5
