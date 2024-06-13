@@ -1,0 +1,42 @@
+logging.level:
+  org:
+    mongodb:
+      driver:
+        protocol:
+          event: ERROR
+  root: INFO
+  ReportLogger: ERROR
+
+spring:
+  jackson.default-property-inclusion: non_null
+  main.allow-circular-references: true
+  data:
+    mongodb:
+      database: localEnv
+      host: localhost
+      port: 27017
+
+management:
+  info:
+    git:
+      enabled: true
+      mode: full
+    endpoints:
+      web:
+        exposure:
+          include: health, info, env
+    endpoint:
+      health:
+        show-components: always
+        show-details: always
+      env:
+        additional-keys-to-sanitize: spring.data.mongodb.uri
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-exception: false
