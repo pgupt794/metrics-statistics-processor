@@ -1,0 +1,11 @@
+{
+  "correlationId": "4d188151-f900-45cc-b40b-39b1bac11ced",
+  "batchId": "8eba613a-2670-443c-b53e-4aea50a85ac6",
+  "batchType": "CSV_BATCH",
+  "component": {
+    "name": "CSV_BATCH_PROCESSOR",
+    "status": "PROCESSING_COMPLETED"
+  },
+  "createdTs": "2024-03-15T10:08:29.5879Z",
+  "lastUpdatedTs": "2024-03-15T10:08:30.0125Z"
+}
