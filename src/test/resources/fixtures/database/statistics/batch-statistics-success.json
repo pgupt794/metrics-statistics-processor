@@ -1,0 +1,12 @@
+{
+  "_id": "65dc2a2557396f39424195b1",
+  "batchId": "8966b472-1eb5-4750-aba9-811f33056fc0",
+  "batchType": "CSV_BATCH",
+  "fileName": "CSV_BATCH_17072024_171759.csv",
+  "eventReceived": 50,
+  "eventFailed": 14,
+  "eventSuccess": 36,
+  "batchDate": "2024-07-17T07:38:49Z",
+  "createdTs": "2024-07-17T10:40:25.155Z",
+  "lastUpdatedTs": "2024-07-17T10:41:40.687Z"
+}

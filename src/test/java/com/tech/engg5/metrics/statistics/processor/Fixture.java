@@ -32,7 +32,8 @@ public enum Fixture {
   @RequiredArgsConstructor
   @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
   public enum SubPath {
-    METRICS("metrics");
+    METRICS("metrics"),
+    STATISTICS("statistics");
 
     String subPath;
 
