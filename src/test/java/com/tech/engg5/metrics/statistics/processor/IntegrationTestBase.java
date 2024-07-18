@@ -1,6 +1,7 @@
 package com.tech.engg5.metrics.statistics.processor;
 
 import com.tech.engg5.metrics.statistics.processor.metrics.model.Metrics;
+import com.tech.engg5.metrics.statistics.processor.statistics.model.mongo.Statistics;
 import org.assertj.core.api.RecursiveComparisonAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
@@ -16,6 +17,8 @@ public class IntegrationTestBase {
 
   protected static final List<String> DEFAULT_FIELDS_TO_IGNORE_METRICS =
     asList(Metrics.Fields.createdTs, Metrics.Fields.lastUpdatedTs);
+  protected static final List<String> DEFAULT_FIELDS_TO_IGNORE_STATISTICS =
+    asList(Statistics.Fields.createdTs, Statistics.Fields.lastUpdatedTs);
 
   protected static final Duration EXPECTING_MESSAGES_TIMEOUT = Duration.ofSeconds(500);
 
@@ -25,6 +28,11 @@ public class IntegrationTestBase {
   @SafeVarargs
   protected final <T> void thenExpectDatabaseEntriesMetrics(Class<T> type, T... expectedEntries) {
     thenExpectDatabaseEntries(type, DEFAULT_FIELDS_TO_IGNORE_METRICS, expectedEntries);
+  }
+
+  @SafeVarargs
+  protected final <T> void thenExpectDatabaseEntriesStatistics(Class<T> type, T... expectedEntries) {
+    thenExpectDatabaseEntries(type, DEFAULT_FIELDS_TO_IGNORE_STATISTICS, expectedEntries);
   }
 
   @SafeVarargs

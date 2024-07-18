@@ -1,11 +1,11 @@
-package com.tech.engg5.metrics.statistics.processor.metrics.model;
+package com.tech.engg5.metrics.statistics.processor.statistics.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.tech.engg5.metrics.statistics.processor.metrics.enums.BatchType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
@@ -15,17 +15,19 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldNameConstants
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Document(collection = "event-metrics")
-public class Metrics {
-
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Document(collection = "csv-batch-summary")
+public class CsvBatchSummary {
   @Id
-  String correlationId;
-  String batchId;
-  BatchType batchType;
-  Component component;
-  Failure failure;
+  String summaryId;
+  String fileName;
+  String fileCreatedBy;
+  Instant fileDate;
+  Long recordCount;
+  String status;
+  String detailedStatus;
   Instant createdTs;
+  @LastModifiedDate
   Instant lastUpdatedTs;
 }
