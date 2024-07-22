@@ -40,8 +40,8 @@ public class StatisticsServiceTest extends IntegrationTestBase {
 
   @Test
   @SneakyThrows
-  @DisplayName("Verify that statistics object get saved in Database.")
-  void shouldSaveStatisticsInDB() {
+  @DisplayName("Verify that batch statistics object get saved in Database.")
+  void shouldSaveBatchStatisticsInDB() {
     val batchStatisticsFile = "batch-statistics-success.json";
     val dbEntry = objectMapper.readValue(Fixture.DATABASE.loadFixture(batchStatisticsFile,
       Fixture.SubPath.STATISTICS), Statistics.class);
@@ -59,6 +59,46 @@ public class StatisticsServiceTest extends IntegrationTestBase {
       .build();
 
     val invoke = statisticsService.saveBatchStatistics(statistics).block();
+    thenExpectDatabaseEntriesStatistics(Statistics.class, dbEntry);
+  }
+
+  @Test
+  @SneakyThrows
+  @DisplayName("Verify that real-time statistics object with event-type get saved in Database.")
+  void shouldSaveRealTimeStatisticsWithEventTypeInDB() {
+    val realTimeStatisticsFile = "realtime-statistics-with-eventType.json";
+    val dbEntry = objectMapper.readValue(Fixture.DATABASE.loadFixture(realTimeStatisticsFile,
+      Fixture.SubPath.STATISTICS), Statistics.class);
+
+    Statistics statistics = Statistics.builder()
+      .errorMessage("Event parsing failed")
+      .eventType("1FI_HARRY_POTTER_AND_THE_SORCERER_STONE")
+      .eventFailed(10L)
+      .capturedFrom(Instant.parse("2024-07-17T00:00:00.00Z"))
+      .capturedTo(Instant.parse("2024-07-17T23:59:59.999Z"))
+      .build();
+
+    val invoke = statisticsService.saveRealTimeFailureStatistics(statistics).block();
+    thenExpectDatabaseEntriesStatistics(Statistics.class, dbEntry);
+  }
+
+  @Test
+  @SneakyThrows
+  @DisplayName("Verify that real-time statistics object without event-type get saved in Database.")
+  void shouldSaveRealTimeStatisticsWithoutEventTypeInDB() {
+    val realTimeStatisticsFile = "realtime-statistics-without-eventType.json";
+    val dbEntry = objectMapper.readValue(Fixture.DATABASE.loadFixture(realTimeStatisticsFile,
+      Fixture.SubPath.STATISTICS), Statistics.class);
+
+    Statistics statistics = Statistics.builder()
+      .errorMessage("Event parsing failed")
+      .eventType(null)
+      .eventFailed(10L)
+      .capturedFrom(Instant.parse("2024-07-17T00:00:00.00Z"))
+      .capturedTo(Instant.parse("2024-07-17T23:59:59.999Z"))
+      .build();
+
+    val invoke = statisticsService.saveRealTimeFailureStatistics(statistics).block();
     thenExpectDatabaseEntriesStatistics(Statistics.class, dbEntry);
   }
 }

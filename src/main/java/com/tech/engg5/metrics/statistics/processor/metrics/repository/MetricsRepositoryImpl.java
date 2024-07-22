@@ -3,20 +3,22 @@ package com.tech.engg5.metrics.statistics.processor.metrics.repository;
 import com.tech.engg5.metrics.statistics.processor.metrics.enums.ComponentStatus;
 import com.tech.engg5.metrics.statistics.processor.metrics.model.Metrics;
 import com.tech.engg5.metrics.statistics.processor.statistics.model.domain.MetricsBatchSummary;
+import com.tech.engg5.metrics.statistics.processor.statistics.model.domain.MetricsRealTimeSummary;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
-import org.springframework.data.mongodb.core.aggregation.GroupOperation;
-import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -38,6 +40,7 @@ public class MetricsRepositoryImpl implements MetricsRepositoryCustom {
       .setOnInsert(Metrics.Fields.correlationId, metrics.getCorrelationId())
       .setOnInsert(Metrics.Fields.batchId, metrics.getBatchId())
       .setOnInsert(Metrics.Fields.batchType, metrics.getBatchType())
+      .setOnInsert(Metrics.Fields.mappingId, metrics.getMappingId())
       .set(Metrics.Fields.component, metrics.getComponent())
       .set(Metrics.Fields.failure, metrics.getFailure())
       .setOnInsert(Metrics.Fields.createdTs, metrics.getCreatedTs())
@@ -73,5 +76,38 @@ public class MetricsRepositoryImpl implements MetricsRepositoryCustom {
     Aggregation aggregation = Aggregation.newAggregation(matchOperation, groupOperation);
     return mongoTemplate.aggregate(aggregation, "event-metrics", MetricsBatchSummary.class)
       .singleOrEmpty();
+  }
+
+  @Override
+  public Flux<String> findDistinctErrorMessagesBetweenTimeRange(Instant from, Instant to) {
+    LOG.info("Fetching distinct error-messages between [{}] to [{}].", from, to);
+
+    Query searchQuery = query(where(Metrics.Fields.createdTs).gte(from).lte(to)
+      .and(Metrics.Fields.batchId).is(null));
+    Set<String> seenErrorMessages = new HashSet<>();
+
+    return mongoTemplate.find(searchQuery, Metrics.class, "event-metrics")
+      .filter(metric -> ObjectUtils.isNotEmpty(metric.getFailure())
+      && StringUtils.hasText(metric.getFailure().getErrorMessage())
+      && seenErrorMessages.add(metric.getFailure().getErrorMessage().toLowerCase()))
+    .map(metric -> metric.getFailure().getErrorMessage())
+    .distinct();
+  }
+
+  @Override
+  public Flux<MetricsRealTimeSummary> findMetricsRealTimeSummary(Instant from, Instant to, String errorMessage) {
+    LOG.info("Inside findMetricsRealTimeSummary method for errorMessage - [{}].", errorMessage);
+
+    Criteria criteria = Criteria.where(Metrics.Fields.createdTs).gte(from).lte(to)
+      .and(Metrics.Fields.batchId).is(null)
+      .and("failure.errorMessage").is(errorMessage);
+    AggregationOperation match = Aggregation.match(criteria);
+    AggregationOperation group = Aggregation.group(Metrics.Fields.mappingId)
+      .count().as("failedRecordCount")
+      .first("failure.errorMessage").as("errorMessage")
+      .first(Metrics.Fields.mappingId).as(MetricsRealTimeSummary.Fields.mappingId);
+    Aggregation aggregation = Aggregation.newAggregation(match, group);
+
+    return mongoTemplate.aggregate(aggregation, "event-metrics", MetricsRealTimeSummary.class);
   }
 }

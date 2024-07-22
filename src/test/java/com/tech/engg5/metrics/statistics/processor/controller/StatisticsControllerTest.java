@@ -1,5 +1,6 @@
 package com.tech.engg5.metrics.statistics.processor.controller;
 
+import com.tech.engg5.metrics.statistics.processor.Fixture;
 import com.tech.engg5.metrics.statistics.processor.IntegrationTestBase;
 import com.tech.engg5.metrics.statistics.processor.metrics.model.Metrics;
 import com.tech.engg5.metrics.statistics.processor.metrics.repository.MetricsRepositoryImpl;
@@ -8,7 +9,7 @@ import com.tech.engg5.metrics.statistics.processor.statistics.model.domain.Metri
 import com.tech.engg5.metrics.statistics.processor.statistics.model.mongo.Statistics;
 import com.tech.engg5.metrics.statistics.processor.statistics.repository.CsvBatchSummaryRepositoryImpl;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +35,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Slf4j
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -114,5 +114,61 @@ public class StatisticsControllerTest extends IntegrationTestBase {
       .returnResult().getResponseBody();
 
     assert Objects.requireNonNull(response).contains("No batch records found for the given time-range.");
+  }
+
+  @Test
+  @SneakyThrows
+  @DisplayName("Verify that response status code is 200 and contains real-time statistics object.")
+  void shouldGenerateRealTimeFailureStatistics() {
+    String metricsDataFile = "metrics-real-time.json";
+    val metricsData = Fixture.DATABASE.loadFixture(metricsDataFile, Fixture.SubPath.METRICS);
+
+    List<Metrics> metricsDataList = readStringAsList(metricsData, Metrics[].class);
+    metricsDataList.forEach(metrics -> reactiveMongoOperations.save(metrics, "event-metrics").block());
+
+    Instant fromTs = Instant.parse("2024-06-20T00:00:00Z");
+    Instant toTs = Instant.parse("2024-06-20T23:59:59.999999999Z");
+
+    var response = webTestClient
+      .get()
+      .uri(uriBuilder -> uriBuilder
+        .path("/event/statistics/realtime")
+        .queryParam("fromTs", fromTs)
+        .queryParam("toTs", toTs)
+        .build())
+      .exchange()
+      .expectStatus()
+      .isOk()
+      .expectBody(String.class)
+      .returnResult().getResponseBody();
+
+    assertThat(response).containsSubsequence("\"eventType\":\"mapping_a\","
+      + "\"errorMessage\":\"Event parsing failed.\",\"eventFailed\":2,\"capturedFrom\":\"2024-06-20T00:00:00Z\","
+      + "\"capturedTo\":\"2024-06-20T23:59:59.999Z\"");
+
+    assertThat(response).containsSubsequence("\"eventType\":\"mapping_b\","
+      + "\"errorMessage\":\"Transformation failed\",\"eventFailed\":3,\"capturedFrom\":\"2024-06-20T00:00:00Z\","
+      + "\"capturedTo\":\"2024-06-20T23:59:59.999Z\"");
+  }
+
+  @Test
+  void shouldReturn404WhenNoRealTimeRecordsWithFailedErrorMessage() {
+    Instant fromTs = Instant.parse("2024-06-20T00:00:00Z");
+    Instant toTs = Instant.parse("2024-06-20T23:59:59.999999999Z");
+
+    var response = webTestClient
+      .get()
+      .uri(uriBuilder -> uriBuilder
+        .path("/event/statistics/realtime")
+        .queryParam("fromTs", fromTs)
+        .queryParam("toTs", toTs)
+        .build())
+      .exchange()
+      .expectStatus()
+      .is4xxClientError()
+      .expectBody(String.class)
+      .returnResult().getResponseBody();
+
+    assert Objects.requireNonNull(response).contains("No real-time records found for the given time-range.");
   }
 }

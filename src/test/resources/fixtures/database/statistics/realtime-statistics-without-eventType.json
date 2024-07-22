@@ -1,0 +1,7 @@
+{
+  "errorMessage": "Event parsing failed",
+  "eventType": null,
+  "eventFailed": 10,
+  "capturedFrom": "2024-07-17T00:00:00.00Z",
+  "capturedTo": "2024-07-17T23:59:59.999Z"
+}

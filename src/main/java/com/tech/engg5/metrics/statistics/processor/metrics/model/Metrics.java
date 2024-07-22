@@ -24,6 +24,7 @@ public class Metrics {
   String correlationId;
   String batchId;
   BatchType batchType;
+  String mappingId;
   Component component;
   Failure failure;
   Instant createdTs;

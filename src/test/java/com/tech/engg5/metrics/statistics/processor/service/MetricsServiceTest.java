@@ -54,6 +54,7 @@ public class MetricsServiceTest extends IntegrationTestBase {
       .correlationId("4d188151-f900-45cc-b40b-39b1bac11ced")
       .batchId("8eba613a-2670-443c-b53e-4aea50a85ac6")
       .batchType(BatchType.CSV_BATCH)
+      .mappingId("1FI_HARRY_POTTER_AND_THE_SORCERER_STONE")
       .component(Component.builder()
         .name(ComponentName.CSV_BATCH_PROCESSOR)
         .status(ComponentStatus.PROCESSING_COMPLETED)

@@ -6,6 +6,7 @@
     "name": "CSV_BATCH_PROCESSOR",
     "status": "PROCESSING_COMPLETED"
   },
+  "mappingId": "1FI_HARRY_POTTER_AND_THE_SORCERER_STONE",
   "failure": null,
   "createdTs": "2024-03-15T10:08:29.5879Z",
   "lastUpdatedTs": "2024-03-15T10:08:30.0125Z"
