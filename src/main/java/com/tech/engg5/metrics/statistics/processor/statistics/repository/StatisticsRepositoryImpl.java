@@ -43,6 +43,27 @@ public class StatisticsRepositoryImpl implements StatisticsRepositoryCustom {
   }
 
   @Override
+  public Mono<Statistics> createOrUpdateRealTimeFailureStatistics(Statistics statistics) {
+    LOG.info("Inside createOrUpdateRealTimeFailureStatistics. ErrorMessage - [{}], mappingId - [{}]",
+      statistics.getErrorMessage(), statistics.getEventType());
+
+    Query query = query(where(Statistics.Fields.errorMessage).is(statistics.getErrorMessage())
+      .and(Statistics.Fields.eventType).is(statistics.getEventType()));
+    Update updateDefinition = new Update()
+      .setOnInsert(Statistics.Fields.errorMessage, statistics.getErrorMessage())
+      .set(Statistics.Fields.eventType, statistics.getEventType())
+      .set(Statistics.Fields.eventFailed, statistics.getEventFailed())
+      .setOnInsert(Statistics.Fields.capturedFrom, statistics.getCapturedFrom())
+      .setOnInsert(Statistics.Fields.capturedTo, statistics.getCapturedTo())
+      .setOnInsert(Statistics.Fields.createdTs, Instant.now())
+      .set(Statistics.Fields.lastUpdatedTs, Instant.now());
+
+    return mongoTemplate.findAndModify(query, updateDefinition, options().upsert(true).returnNew(true), Statistics.class)
+      .doOnSuccess(success -> LOG.info("Statistics for real-time failure successfully for errorMessage [{}], "
+        + "mappingId - [{}].", statistics.getErrorMessage(), statistics.getEventType()));
+  }
+
+  @Override
   public Mono<Statistics> findByBatchId(String batchId) {
     Query query = query(where(Statistics.Fields.batchId).is(batchId));
     return this.mongoTemplate.findOne(query, Statistics.class);

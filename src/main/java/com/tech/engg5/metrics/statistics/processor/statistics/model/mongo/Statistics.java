@@ -20,6 +20,7 @@ public class Statistics {
 
   String batchId;
   String batchType;
+  String eventType;
   String fileName;
   String errorMessage;
   Long eventReceived;

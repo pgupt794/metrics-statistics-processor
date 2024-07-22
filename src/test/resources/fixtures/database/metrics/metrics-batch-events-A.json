@@ -3,6 +3,7 @@
     "correlationId": "003f51d8-7eb6-4468-87c6-1f8e94f03572",
     "batchId": "f1234221-da02-45a9-811c-802f5881e39e",
     "batchType": "CSV_BATCH",
+    "mappingId": "1FI_1984",
     "component": {
       "name": "CSV_BATCH_PROCESSOR",
       "status": "PROCESSING_COMPLETED"
@@ -14,6 +15,7 @@
     "correlationId": "4bbc19f8-c874-4f10-86f7-c0e746a5f089",
     "batchId": "f1234221-da02-45a9-811c-802f5881e39e",
     "batchType": "CSV_BATCH",
+    "mappingId": "1FI_1984",
     "component": {
       "name": "CSV_BATCH_PROCESSOR",
       "status": "PROCESSING_COMPLETED"
@@ -25,6 +27,7 @@
     "correlationId": "9c296dbd-899c-41cb-8e6d-3fd47bdadc38",
     "batchId": "f1234221-da02-45a9-811c-802f5881e39e",
     "batchType": "CSV_BATCH",
+    "mappingId": "1FI_1984",
     "component": {
       "name": "CSV_BATCH_PROCESSOR",
       "status": "PROCESSING_FAILED"
@@ -36,6 +39,7 @@
     "correlationId": "5f73e07e-b7fb-4b65-b245-a36226903134",
     "batchId": "f1234221-da02-45a9-811c-802f5881e39e",
     "batchType": "CSV_BATCH",
+    "mappingId": "1FI_1984",
     "component": {
       "name": "CSV_BATCH_PROCESSOR",
       "status": "PROCESSING_FAILED"
@@ -47,6 +51,7 @@
     "correlationId": "dd608ff3-959e-41c1-8a0e-5a548abfbbc2",
     "batchId": "f1234221-da02-45a9-811c-802f5881e39e",
     "batchType": "CSV_BATCH",
+    "mappingId": "1FI_1984",
     "component": {
       "name": "CSV_BATCH_PROCESSOR",
       "status": "PROCESSING_COMPLETED"

@@ -1,0 +1,7 @@
+{
+  "errorMessage": "Event parsing failed",
+  "eventType": "1FI_HARRY_POTTER_AND_THE_SORCERER_STONE",
+  "eventFailed": 10,
+  "capturedFrom": "2024-07-17T00:00:00.00Z",
+  "capturedTo": "2024-07-17T23:59:59.999Z"
+}

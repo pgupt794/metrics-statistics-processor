@@ -1,0 +1,82 @@
+[
+  {
+    "_id": "8a3e0aa1-4c46-451c-a849-757da53177e2",
+    "batchId": null,
+    "batchType": null,
+    "mappingId": "mapping_a",
+    "component": {
+      "name": "CSV_BATCH_PROCESSOR",
+      "status": "PROCESSING_FAILED"
+    },
+    "failure": {
+      "errorMessage": "Event parsing failed."
+    },
+    "createdTs": "2024-06-20T05:10:30Z",
+    "lastUpdatedTs": "2024-06-20T10:12:35Z",
+    "trackingId": null
+  },
+  {
+    "_id": "aed901c5-b820-48aa-afc1-be530a5937f9",
+    "batchId": null,
+    "batchType": null,
+    "mappingId": "mapping_a",
+    "component": {
+      "name": "CSV_BATCH_PROCESSOR",
+      "status": "PROCESSING_FAILED"
+    },
+    "failure": {
+      "errorMessage": "Event parsing failed."
+    },
+    "createdTs": "2024-06-20T05:10:30Z",
+    "lastUpdatedTs": "2024-06-20T10:12:35Z",
+    "trackingId": null
+  },
+  {
+    "_id": "8a241868-2b84-4e45-8a98-4e62c5ab98e0",
+    "batchId": null,
+    "batchType": null,
+    "mappingId": "mapping_b",
+    "component": {
+      "name": "CSV_BATCH_PROCESSOR",
+      "status": "PROCESSING_FAILED"
+    },
+    "failure": {
+      "errorMessage": "Transformation failed"
+    },
+    "createdTs": "2024-06-20T05:10:30Z",
+    "lastUpdatedTs": "2024-06-20T10:12:35Z",
+    "trackingId": null
+  },
+  {
+    "_id": "517e5388-975c-4928-b279-e30394e2482a",
+    "batchId": null,
+    "batchType": null,
+    "mappingId": "mapping_b",
+    "component": {
+      "name": "CSV_BATCH_PROCESSOR",
+      "status": "PROCESSING_FAILED"
+    },
+    "failure": {
+      "errorMessage": "Transformation failed"
+    },
+    "createdTs": "2024-06-20T05:10:30Z",
+    "lastUpdatedTs": "2024-06-20T10:12:35Z",
+    "trackingId": null
+  },
+  {
+    "_id": "eb73a5ce-e03d-4ddc-ab92-dcd2eac0718a",
+    "batchId": null,
+    "batchType": null,
+    "mappingId": "mapping_b",
+    "component": {
+      "name": "CSV_BATCH_PROCESSOR",
+      "status": "PROCESSING_FAILED"
+    },
+    "failure": {
+      "errorMessage": "Transformation failed"
+    },
+    "createdTs": "2024-06-20T05:10:30Z",
+    "lastUpdatedTs": "2024-06-20T10:12:35Z",
+    "trackingId": null
+  }
+]

@@ -8,5 +8,8 @@ import reactor.core.publisher.Mono;
 public interface StatisticsRepositoryCustom {
 
   Mono<Statistics> createOrUpdateBatchStatistics(Statistics statistics);
+
+  Mono<Statistics> createOrUpdateRealTimeFailureStatistics(Statistics statistics);
+
   Mono<Statistics> findByBatchId(String batchId);
 }

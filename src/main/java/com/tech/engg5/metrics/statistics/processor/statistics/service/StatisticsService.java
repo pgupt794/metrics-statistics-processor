@@ -87,11 +87,38 @@ public class StatisticsService {
     }
   }
 
+  public Flux<Statistics> findFailedRealTimeRecordsBetweenTimeRange(Instant fromTs, Instant toTs) {
+    LOG.info("Inside StatisticsService.findFailedRealTimeRecordsBetweenTimeRange method.");
+
+    return metricsRepository.findDistinctErrorMessagesBetweenTimeRange(fromTs, toTs)
+      .concatMap(errorMessage -> metricsRepository.findMetricsRealTimeSummary(fromTs, toTs, errorMessage)
+        .map(summary -> Statistics.builder()
+          .errorMessage(errorMessage)
+          .eventType(summary.getMappingId())
+          .eventFailed(summary.getFailedRecordCount())
+          .capturedFrom(fromTs)
+          .capturedTo(toTs)
+          .build()))
+      .flatMap(this::saveRealTimeFailureStatistics)
+      .onErrorResume(err -> {
+        LOG.error("Error occurred while fetching real-time records between time-range.");
+        return Mono.error(err);
+      });
+  }
+
   public Mono<Statistics> saveBatchStatistics(Statistics statistics) {
     return statisticsRepository.createOrUpdateBatchStatistics(statistics)
       .onErrorResume(err -> {
         LOG.error("Error while creating/updating batch statistics.");
         return Mono.error(new DatabaseException("Batch statistics database insert error.", err));
+      });
+  }
+
+  public Mono<Statistics> saveRealTimeFailureStatistics(Statistics statistics) {
+    return statisticsRepository.createOrUpdateRealTimeFailureStatistics(statistics)
+      .onErrorResume(err -> {
+        LOG.error("Error while creating/updating real-time statistics.");
+        return Mono.error(new DatabaseException("RealTime statistics database insert error.", err));
       });
   }
 }

@@ -27,7 +27,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ActiveProfiles("test")
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class MetricsControllerTest extends IntegrationTestBase {
+public class  MetricsControllerTest extends IntegrationTestBase {
 
   @Autowired
   WebTestClient webTestClient;
